@@ -15,32 +15,49 @@
             background-color: #222;
             color: #fff;
         }
-        canvas, video {
-            max-width: 90%;
-            max-height: 90%;
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .videos {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        video, canvas {
+            max-width: 100%;
+            height: auto;
             border: 2px solid #fff;
-            margin-top: 10px;
+            margin: 5px;
         }
         button {
-            margin-top: 10px;
-            padding: 10px;
+            margin: 5px;
+            padding: 10px 20px;
             font-size: 16px;
-            color: #222;
-            background-color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
         }
+        @media (min-width: 600px) {
+            .videos {
+                flex-direction: row;
+            }
+            video, canvas {
+                max-width: 85%;
+            }
+        }
+
     </style>
 </head>
 <body>
     <h1>Live Camera with Dog Vision Filter</h1>
-    <video id="video" autoplay></video>
-    <canvas id="canvas"></canvas>
-
-    <!-- New buttons -->
-    <button id="switch-camera">Switch Camera</button>
-    <button id="capture-photo">Capture Photo</button>
+    <div class="container">
+        <video id="video" autoplay></video>
+        <canvas id="canvas"></canvas>
+    </div>
+    <div class="buttons-container">
+        <button id="switch-camera">Switch Camera</button>
+        <button id="capture-photo">Capture Photo</button>
+    </div>
 
     <!-- Include the external JS file -->
     <script src="dogVisionFilter.js"></script>
