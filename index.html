@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Vision Filter</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #222;
+            color: #fff;
+        }
+        canvas, video {
+            max-width: 90%;
+            max-height: 90%;
+            border: 2px solid #fff;
+            margin-top: 10px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            color: #222;
+            background-color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Camera with Dog Vision Filter</h1>
+    <video id="video" autoplay></video>
+    <canvas id="canvas"></canvas>
+
+    <!-- New buttons -->
+    <button id="switch-camera">Switch Camera</button>
+    <button id="capture-photo">Capture Photo</button>
+
+    <!-- Include the external JS file -->
+    <script src="dogVisionFilter.js"></script>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const switchCameraButton = document.getElementById('switch-camera');
+        const capturePhotoButton = document.getElementById('capture-photo');
+
+        let currentStream;
+        let useFrontCamera = true;
+
+        function startCamera() {
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+            }
+
+            const constraints = {
+                video: {
+                    facingMode: useFrontCamera ? 'user' : 'environment'
+                }
+            };
+
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(stream => {
+                    currentStream = stream;
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch(err => {
+                    console.error("Error accessing camera: ", err);
+                });
+        }
+
+        function applyDogVisionFilter() {
+            if (video.videoWidth > 0 && video.videoHeight > 0) {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                imgprocess(imageData, true, true, 0);
+                ctx.putImageData(imageData, 0, 0);
+            }
+            requestAnimationFrame(applyDogVisionFilter);
+        }
+
+        video.addEventListener('play', () => {
+            function checkVideoReady() {
+                if (video.videoWidth > 0 && video.videoHeight > 0) {
+                    applyDogVisionFilter();
+                } else {
+                    requestAnimationFrame(checkVideoReady);
+                }
+            }
+            checkVideoReady();
+        });
+
+        switchCameraButton.addEventListener('click', () => {
+            useFrontCamera = !useFrontCamera;
+            startCamera();
+        });
+
+        capturePhotoButton.addEventListener('click', () => {
+            if (video.videoWidth > 0 && video.videoHeight > 0) {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                imgprocess(imageData, true, true, 0);
+                ctx.putImageData(imageData, 0, 0);
+
+                const dataURL = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = 'photo.png';
+                link.click();
+            }
+        });
+
+        startCamera();
+    </script>
+</body>
+</html>
