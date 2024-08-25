@@ -2,12 +2,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly; /* Distribute space evenly */
+    justify-content: space-evenly; 
     height: 90vh;
     margin: 0;
     background-color: #222;
     color: #fff;
-    padding: 10px; /* Add some padding to avoid elements touching the edge */
+    padding: 10px; 
     box-sizing: border-box;
 }
 
@@ -15,40 +15,40 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex: 1; /* Allow the container to take up available vertical space */
+    flex: 1; 
     justify-content: center;
-    width: 100%; /* Ensure it takes the full width */
+    width: 100%;
 }
 
 .videos {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%; /* Ensure the videos container takes the full width */
+    width: 100%;
 }
 
 video, canvas {
-    width: 100%; /* Scale to full width */
+    width: fit-content;
     max-height: 30vh;
     height: auto;
-    border: 2px solid #fff;
+    border: 0.5vh solid #ffffff;
     margin: 5px 0;
-    object-fit: contain; /* Ensure the aspect ratio is maintained */
+    object-fit: contain;
 }
 
 .buttons-container {
     display: flex;
-    flex-direction: row; /* Buttons side by side */
+    flex-direction: row;
     justify-content: center;
     width: 100%;
-    gap: 10px; /* Space between buttons */
+    gap: 10px;
 }
 
 button {
-    flex: 1; /* Buttons take up equal space */
+    flex: 1;
     margin: 5px;
     padding: 10px 20px;
     font-size: 16px;
-    max-width: 150px; /* Restrict the maximum width of buttons */
+    max-width: 150px;
     width: 100%;
 }
