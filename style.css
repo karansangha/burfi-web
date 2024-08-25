@@ -2,31 +2,53 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
+    justify-content: space-evenly; /* Distribute space evenly */
+    height: 90vh;
     margin: 0;
     background-color: #222;
     color: #fff;
+    padding: 10px; /* Add some padding to avoid elements touching the edge */
+    box-sizing: border-box;
 }
+
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex: 1; /* Allow the container to take up available vertical space */
+    justify-content: center;
+    width: 100%; /* Ensure it takes the full width */
 }
+
 .videos {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 10px;
+    width: 100%; /* Ensure the videos container takes the full width */
 }
+
 video, canvas {
-    max-width: 100%;
-    height: fit-content;
+    width: 100%; /* Scale to full width */
+    max-height: 30vh;
+    height: auto;
     border: 2px solid #fff;
-    margin: 5px;
+    margin: 5px 0;
+    object-fit: contain; /* Ensure the aspect ratio is maintained */
 }
+
+.buttons-container {
+    display: flex;
+    flex-direction: row; /* Buttons side by side */
+    justify-content: center;
+    width: 100%;
+    gap: 10px; /* Space between buttons */
+}
+
 button {
+    flex: 1; /* Buttons take up equal space */
     margin: 5px;
     padding: 10px 20px;
     font-size: 16px;
+    max-width: 150px; /* Restrict the maximum width of buttons */
+    width: 100%;
 }
