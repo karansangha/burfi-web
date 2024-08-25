@@ -49,8 +49,6 @@
                 width: 100%;
             }
         }
-
-
     </style>
 </head>
 <body>
@@ -76,6 +74,12 @@
 
         let currentStream;
         let useFrontCamera = true;
+
+        const matrix = [
+            [0.33066007, 0.66933993, 0],
+            [0.33066007, 0.66933993, 0],
+            [-0.02785538, 0.02785538, 1]
+        ];
 
         function startCamera() {
             if (currentStream) {
@@ -106,7 +110,18 @@
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
                 let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                imgprocess(imageData, true, true, 5);
+                let data = imageData.data;
+
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+
+                    data[i] = matrix[0][0] * r + matrix[0][1] * g + matrix[0][2] * b;
+                    data[i + 1] = matrix[1][0] * r + matrix[1][1] * g + matrix[1][2] * b;
+                    data[i + 2] = matrix[2][0] * r + matrix[2][1] * g + matrix[2][2] * b;
+                }
+
                 ctx.putImageData(imageData, 0, 0);
             }
             requestAnimationFrame(applyDogVisionFilter);
@@ -135,7 +150,18 @@
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
                 let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                imgprocess(imageData, true, true, 0);
+                let data = imageData.data;
+
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+
+                    data[i] = matrix[0][0] * r + matrix[0][1] * g + matrix[0][2] * b;
+                    data[i + 1] = matrix[1][0] * r + matrix[1][1] * g + matrix[1][2] * b;
+                    data[i + 2] = matrix[2][0] * r + matrix[2][1] * g + matrix[2][2] * b;
+                }
+
                 ctx.putImageData(imageData, 0, 0);
 
                 const dataURL = canvas.toDataURL('image/png');
