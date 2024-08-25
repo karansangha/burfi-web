@@ -106,7 +106,7 @@
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
                 let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                imgprocess(imageData, true, true, 0);
+                imgprocess(imageData, true, true, 5);
                 ctx.putImageData(imageData, 0, 0);
             }
             requestAnimationFrame(applyDogVisionFilter);
