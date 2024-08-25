@@ -4,6 +4,11 @@ const ctx = canvas.getContext('2d', { willReadFrequently: true });
 const switchCameraButton = document.getElementById('switch-camera');
 const capturePhotoButton = document.getElementById('capture-photo');
 
+// Fix for iOS Safari from https://leemartin.dev/hello-webrtc-on-safari-11-e8bcb5335295
+video.setAttribute('autoplay', '');
+video.setAttribute('muted', '');
+video.setAttribute('playsinline', '')
+
 let currentStream;
 let useFrontCamera = true;
 
