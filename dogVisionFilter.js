@@ -1,6 +1,6 @@
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d', willread);
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
 const switchCameraButton = document.getElementById('switch-camera');
 const capturePhotoButton = document.getElementById('capture-photo');
 
