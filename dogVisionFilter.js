@@ -10,7 +10,7 @@ video.setAttribute('muted', '');
 video.setAttribute('playsinline', '')
 
 let currentStream;
-let useFrontCamera = true;
+let useFrontCamera = false;
 
 /*
 Source - https://mk.bcgsc.ca/colorblind/math.mhtml#projecthome
