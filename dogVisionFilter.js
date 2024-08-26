@@ -34,15 +34,19 @@ function startCamera() {
         }
     };
 
-    navigator.mediaDevices.getUserMedia(constraints)
-        .then(stream => {
-            currentStream = stream;
-            video.srcObject = stream;
-            video.play();
-        })
-        .catch(err => {
-            console.error("Error accessing camera: ", err);
-        });
+    if (localStorage.getItem('cameraPermissionGranted')) {
+        startCamera();
+    } else {
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(stream => {
+                currentStream = stream;
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(err => {
+                console.error("Error accessing camera: ", err);
+            });
+    }
 }
 
 function applyDogVisionFilter() {
