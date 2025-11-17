@@ -5,12 +5,12 @@ const ctx = canvas.getContext('2d', { willReadFrequently: true });
 const switchCameraButton = document.getElementById('switch-camera');
 const capturePhotoButton = document.getElementById('capture-photo');
 
-// Fix for iOS Safari (and good practice)
+// Make sure your HTML video tag has: <video autoplay muted playsinline></video>
 enableIOSVideoAttributes(video);
 
 let currentStream;
 let useFrontCamera = false;
-let animationFrameId = null; // To control the animation loop
+let animationFrameId = null;
 
 // Deuteranopia RGB transformation matrix
 const colorMatrix = [
@@ -26,7 +26,6 @@ function enableIOSVideoAttributes(videoElement) {
 }
 
 function startCamera() {
-    // Stop any existing stream and animation loop
     if (currentStream) {
         currentStream.getTracks().forEach(track => track.stop());
     }
@@ -35,11 +34,11 @@ function startCamera() {
         animationFrameId = null;
     }
 
+    // *** SIMPLIFIED CONSTRAINTS ***
+    // This is more compatible than asking for an "ideal" size
     const constraints = {
         video: {
-            facingMode: useFrontCamera ? 'user' : 'environment',
-            width: { ideal: 1280 }, // Requesting a size can sometimes help
-            height: { ideal: 720 }
+            facingMode: useFrontCamera ? 'user' : 'environment'
         }
     };
 
@@ -48,19 +47,19 @@ function startCamera() {
             currentStream = stream;
             video.srcObject = stream;
 
-            // Wait for the video to be ready to play
             video.addEventListener('canplay', () => {
-                // Check if we are already drawing
                 if (!animationFrameId) {
                     drawFilteredFrame();
                 }
-            }, { once: true }); // Use { once: true } so it only fires once per stream
+            }, { once: true });
 
             video.play();
         })
         .catch(err => {
+            // *** THIS IS THE MOST IMPORTANT CHANGE ***
+            // This will show you the error on your phone
             console.error("Error accessing camera: ", err);
-            // You could display an error to the user here
+            alert("Camera Error: " + err.name + "\n\n" + err.message);
         });
 }
 
@@ -79,9 +78,7 @@ function applyFilterToImageData(imageData, transformationMatrix) {
 }
 
 function drawFilteredFrame() {
-    // Check if the video is ready and has dimensions
     if (video.readyState >= video.HAVE_CURRENT_DATA && video.videoWidth > 0) {
-        // Set canvas dimensions *once* or check if they've changed
         if (canvas.width !== video.videoWidth) {
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
@@ -97,18 +94,14 @@ function drawFilteredFrame() {
             console.error("Error processing frame: ", e);
         }
     }
-
-    // Continue the loop
     animationFrameId = requestAnimationFrame(drawFilteredFrame);
 }
 
 function capturePhoto() {
     if (video.videoWidth > 0 && video.videoHeight > 0) {
-        // Ensure canvas is the right size (it should be, but just in case)
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
 
-        // Draw one last time to make sure it's the current frame
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const filteredData = applyFilterToImageData(imageData, colorMatrix);
@@ -128,14 +121,10 @@ function downloadImage(dataURL, filename) {
 
 function handleSwitchCamera() {
     useFrontCamera = !useFrontCamera;
-    startCamera(); // This will stop the old stream and start a new one
+    startCamera();
 }
-
-// Remove the old 'play' listener
-// video.addEventListener('play', ...); 
 
 switchCameraButton.addEventListener('click', handleSwitchCamera);
 capturePhotoButton.addEventListener('click', capturePhoto);
 
-// Initial start
 startCamera();
