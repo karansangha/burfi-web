@@ -1,48 +1,146 @@
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Hide scrollbars */
-    background-color: #000; /* Black background for when video loads */
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 .container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Full screen canvas (The Viewport) */
+#canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: none;
+    /* Prevent scrolling */
+}
+
+/* Mirror the canvas when using front camera */
+.mirrored {
+    transform: scaleX(-1);
+}
+
+/* UI Layer sits on top of video */
+.ui-layer {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-}
-
-#canvas {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* This will make the canvas cover the screen, cropping if necessary to maintain aspect ratio */
-}
-
-.buttons-container {
-    position: fixed; /* Fixed position to stay on top of everything */
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
+    pointer-events: none;
+    /* Let touches pass through to the video container for "Hold to Compare" */
     display: flex;
-    gap: 20px;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+    /* Safe area for iPhone X+ */
+    padding-top: max(20px, env(safe-area-inset-top));
+    padding-bottom: max(30px, env(safe-area-inset-bottom));
 }
 
-.buttons-container button {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 50px;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
+.top-bar {
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: auto;
+    /* Re-enable clicks for buttons */
+}
+
+.bottom-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+    position: relative;
+    height: 100px;
+}
+
+/* Glassmorphism Button Styles */
+.icon-button {
+    background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); /* For Safari */
-    transition: background-color 0.2s ease;
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
 }
 
-.buttons-container button:hover {
-    background-color: rgba(255, 255, 255, 0.3);
+.icon-button:active {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0.95);
+}
+
+/* Shutter Button */
+.shutter-button {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    /* Outer ring */
+    border: 4px solid white;
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    transition: transform 0.1s;
+}
+
+.shutter-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px;
+    height: 56px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.shutter-button:active {
+    transform: scale(0.95);
+}
+
+.shutter-button:active::after {
+    width: 50px;
+    height: 50px;
+    background: #eee;
+}
+
+/* Instructions */
+.instructions-overlay {
+    position: absolute;
+    bottom: 120px;
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.instructions-overlay p {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    display: inline-block;
+    font-size: 14px;
+    backdrop-filter: blur(5px);
 }

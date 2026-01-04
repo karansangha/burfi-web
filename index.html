@@ -1,20 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Dog Vision Filter</title>
     <link href="style.css" rel="stylesheet" type="text/css">
 </head>
+
 <body>
     <div class="container">
+        <!-- Video is hidden, used only as source for WebGL -->
         <video id="video" autoplay muted playsinline style="display: none;"></video>
+        <!-- Canvas is the main viewport -->
         <canvas id="canvas"></canvas>
-    </div>
-    <div class="buttons-container">
-        <button id="switch-camera">Switch Camera</button>
-        <button id="capture-photo">Capture Photo</button>
+
+        <!-- SVG Filter Definition -->
+        <!-- SVG Filter Definition -->
+        <!-- SVG Filter Definition -->
+        <!-- SVG Filter Definition Removed: Using Data URI in CSS/JS for better Safari support -->
+
+        <!-- UI Overlay -->
+        <div class="ui-layer">
+            <div class="top-bar">
+                <button id="camera-toggle" class="icon-button" aria-label="Switch Camera">
+                    <!-- Simple SVG Icon for Camera Swap -->
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 10c0-6-8-6-8-6s-8 0-8 6h16z"></path>
+                        <path d="M4 14c0 6 8 6 8 6s8 0 8-6H4z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="bottom-bar">
+                <button id="shutter-button" class="shutter-button" aria-label="Take Photo"></button>
+            </div>
+
+            <div class="instructions-overlay">
+                <p>Hold to see human vision</p>
+            </div>
+        </div>
     </div>
     <script src="dogVisionFilter.js"></script>
 </body>
+
 </html>
